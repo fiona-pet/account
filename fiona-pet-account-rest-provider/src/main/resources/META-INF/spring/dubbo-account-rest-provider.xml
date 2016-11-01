@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--uncomment this if you want to test dubbo's monitor-->
+    <dubbo:monitor protocol="registry"/>
+
+    <!-- here we demonstrate both annotation-based and xml-based configs -->
+    <dubbo:annotation package="cn.fiona.pet.account.facade"/>
+
+    <!-- use tomcat server -->
+    <dubbo:protocol name="rest" threads="500" contextpath="api/v2" server="tomcat" accepts="500"
+                    extension="cn.fiona.pet.account.extension.TraceInterceptor,
+                    cn.fiona.pet.account.extension.TraceFilter,
+                    cn.fiona.pet.account.extension.ClientTraceFilter,
+                    cn.fiona.pet.account.extension.DynamicTraceBinding,
+                    cn.fiona.pet.account.extension.CustomExceptionMapper,
+                    com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter">
+    </dubbo:protocol>
+
+    <!-- auth api v2 -->
+    <dubbo:service interface="cn.fiona.pet.account.facade.AuthRestService" ref="authRestService"
+                   protocol="rest" validation="true" timeout="2000" connections="100"/>
+    <bean id="authRestService" class="cn.fiona.pet.account.facade.AuthRestServiceImpl">
+        <property name="accountService" ref="accountService"/>
+    </bean>
+    <!-- auth api v2 -->
+
+    <!-- menu api v2 -->
+    <dubbo:service interface="cn.fiona.pet.account.facade.MenuRestService" ref="menuRestService"
+                   protocol="rest" validation="true" timeout="2000" connections="100"/>
+    <bean id="menuRestService" class="cn.fiona.pet.account.facade.MenuRestServiceImpl">
+        <property name="menuService" ref="menuService"></property>
+    </bean>
+    <dubbo:reference id="menuService" interface="cn.fiona.pet.account.service.MenuService"/>
+    <!-- menu api v2 -->
+
+    <!-- account api v2 -->
+    <dubbo:service interface="cn.fiona.pet.account.facade.AccountRestService" ref="accountRestService"
+                   protocol="rest" validation="true" timeout="2000" connections="100"/>
+    <bean id="accountRestService" class="cn.fiona.pet.account.facade.AccountRestServiceImpl">
+        <property name="accountService" ref="accountService"/>
+    </bean>
+    <dubbo:reference id="accountService" interface="cn.fiona.pet.account.service.AccountService"/>
+    <!-- account api v2 -->
+
+    <!-- message api v2 -->
+    <dubbo:service interface="cn.fiona.pet.account.facade.MessageRestService" ref="messageRestService"
+                   protocol="rest" validation="true" timeout="2000" connections="100"/>
+
+    <bean id="messageRestService" class="cn.fiona.pet.account.facade.MessageRestServiceImpl">
+        <property name="messageService" ref="messageService"/>
+    </bean>
+
+    <dubbo:reference id="messageService" interface="cn.fiona.pet.account.service.MessageService"/>
+    <!-- message api v2 -->
+</beans>
