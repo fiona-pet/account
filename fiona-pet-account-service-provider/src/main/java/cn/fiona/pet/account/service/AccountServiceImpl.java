@@ -143,6 +143,23 @@ public class AccountServiceImpl implements AccountService {
         return userVO;
     }
 
+    @Override
+    public boolean hasRole(String role, String token) throws ApiException {
+        User user = userDao.findOne(token);
+
+        if (null == user) {
+            throw new ApiException(String.format("%s not exists!", token));
+        }
+
+        for (Role r: user.getRoles()){
+            if (r.getCode().equalsIgnoreCase(role)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean passwordValidation(String password, User user){
 
         byte[] salt = Encodes.decodeHex(user.getSalt());

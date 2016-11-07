@@ -43,4 +43,6 @@ public interface AccountService {
     List<User> listByRoleCode(String code);
 
     User createUser(User user);
+
+    boolean hasRole(String role, String token) throws ApiException;
 }
