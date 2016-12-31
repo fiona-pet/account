@@ -8,6 +8,8 @@ import cn.fiona.pet.account.repository.MenuDao;
 import cn.fiona.pet.account.repository.UserDao;
 import cn.fiona.pet.account.vo.MenuVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +55,20 @@ public class MenuServiceImpl implements MenuService {
         LOGGER.debug("token:{}", token);
         Set<Menu> menuSet = findByToken(token);
 
-        menuSet.addAll(findByParentMenuCode(MENU_ROOT));
+        List<Menu> menuList = new ArrayList<Menu>();
+        menuList.addAll(menuSet);
+        Collections.sort(menuList, new Comparator<Menu>() {
+            @Override
+            public int compare(Menu o1, Menu o2) {
+                return o1.getOrder() - o1.getOrder();
+            }
+        });
+
+        menuList.addAll(findByParentMenuCode(MENU_ROOT));
 
         List<MenuVO> menus = new ArrayList<MenuVO>();
 
-        findChild(menuSet, menus, new HashSet<Menu>(), MENU_ROOT);
+        findChild(menuList, menus, new HashSet<Menu>(), MENU_ROOT);
 
         menus = orderAndRemoveNoSub(menus);
 
@@ -69,27 +80,29 @@ public class MenuServiceImpl implements MenuService {
     private List<MenuVO> orderAndRemoveNoSub(List<MenuVO> menus) {
         List<MenuVO> list = new ArrayList<MenuVO>();
 
+        LOGGER.debug("order list:{}", list);
+
         for (MenuVO menuVO : menus) {
             if (CollectionUtils.isEmpty(menuVO.getSubMenu())) {
                 continue;
             }
 
             list.add(menuVO);
+
+            Collections.sort(menuVO.getSubMenu(), new Comparator<MenuVO>() {
+                @Override
+                public int compare(MenuVO o1, MenuVO o2) {
+                    return o1.getOrder()-o2.getOrder();
+                }
+            });
         }
 
         menus.clear();
 
-        Collections.sort(list, new Comparator<MenuVO>() {
-            @Override
-            public int compare(MenuVO o1, MenuVO o2) {
-                return o1.getOrder() - o2.getOrder();
-            }
-        });
-        LOGGER.debug("order list:{}", list);
         return list;
     }
 
-    private void findChild(Set<Menu> menuSet, List<MenuVO> menuVOList, Set<Menu> hasFind, String code) {
+    private void findChild(List<Menu> menuSet, List<MenuVO> menuVOList, Set<Menu> hasFind, String code) {
         for (Menu menu : menuSet) {
 
             if (hasFind.contains(menu)) {
@@ -105,7 +118,6 @@ public class MenuServiceImpl implements MenuService {
 
                 hasFind.add(menu);
             }
-
         }
 
         for (MenuVO menuVO : menuVOList) {
