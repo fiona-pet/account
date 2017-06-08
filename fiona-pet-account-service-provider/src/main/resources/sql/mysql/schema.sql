@@ -33,6 +33,7 @@ CREATE TABLE `t_role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_role`;
 CREATE TABLE `t_user_role` (
+  `id` VARCHAR(36) NOT NULL,
   `user_id` VARCHAR(36) NOT NULL,
   `role_id` VARCHAR(36) NOT NULL,
   PRIMARY KEY (`user_id`, `role_id`)
