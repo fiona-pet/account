@@ -15,7 +15,7 @@
  */
  package cn.fiona.pet.account.exception;
 
-public class ApiException extends Exception{
+public class ApiException extends RuntimeException{
   public ApiException(String message) {
     super(message);
   }

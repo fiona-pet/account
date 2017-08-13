@@ -9,5 +9,7 @@ import cn.fiona.pet.account.entity.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface UserDao extends PagingAndSortingRepository<User, String> {
-	User findByLoginName(String loginName);
+	User findByLoginNameAndStatus(String loginName, String status);
+
+	User findByLoginName(String admin);
 }

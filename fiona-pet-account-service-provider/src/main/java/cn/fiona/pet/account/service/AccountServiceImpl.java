@@ -9,6 +9,8 @@ import cn.fiona.pet.account.facade.LoginVO;
 import cn.fiona.pet.account.repository.RoleDao;
 import cn.fiona.pet.account.repository.UserDao;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.dubbo.x.entity.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +39,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public String login(LoginVO loginVO) throws ApiException {
-        User user = userDao.findByLoginName(loginVO.getName());
+        User user = userDao.findByLoginNameAndStatus(loginVO.getName(), "OK");
 
         if (null == loginVO){
             throw new InvalidParameterException("输入数据为空!");
         }
 
         if (null == user) {
-            throw new NotFoundException(String.format("[%s]用户未找到!", loginVO.getName()));
+            throw new AuthenticationException(String.format("[%s]用户未找到!", loginVO.getName()));
         }
 
         String password = loginVO.getPassword();

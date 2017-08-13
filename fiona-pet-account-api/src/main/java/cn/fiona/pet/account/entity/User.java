@@ -44,6 +44,16 @@ public class User extends IdEntity {
      */
     private Organize organize;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     /**
      * 用户 角色 信息
      */

@@ -36,16 +36,10 @@ public class AuthRestServiceImpl implements AuthRestService {
     public RestResult<String> login(@ApiParam(value = "登录信息", required = true) LoginVO loginVO) {
         RestResult<String> restResult = RestResult.NOT_FOND();
 
-        try {
-            String token = accountService.login(loginVO);
 
-            restResult = RestResult.OK(token);
-        }catch (ApiException apiE){
-            restResult = RestResult.REST_RESULT(apiE);
-        }catch (Exception e){
-            logger.warn("{}", e);
-            restResult = RestResult.ERROR(e.getMessage());
-        }
+        String token = accountService.login(loginVO);
+
+        restResult = RestResult.OK(token);
 
         return restResult;
     }
