@@ -31,13 +31,16 @@ package cn.fiona.pet.account.extension;
  * limitations under the License.
  */
 
+import cn.fiona.pet.account.entity.RestResultEnum;
+import cn.fiona.pet.account.exception.ApiException;
+import cn.fiona.pet.account.exception.AuthorizationException;
 import cn.fiona.pet.account.facade.RestResult;
+import com.alibaba.dubbo.rpc.protocol.rest.RestConstraintViolation;
+import com.alibaba.dubbo.rpc.protocol.rest.ViolationReport;
 import com.alibaba.dubbo.rpc.protocol.rest.support.ContentType;
-import org.apache.shiro.authc.AuthenticationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.NotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
@@ -45,52 +48,52 @@ import javax.ws.rs.ext.ExceptionMapper;
 /**
  * @author
  */
-public class CustomExceptionMapper implements ExceptionMapper<RuntimeException> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomExceptionMapper.class);
-    @Override
-    public Response toResponse(RuntimeException ex) {
-        RestResult restResult = new RestResult();
-        if (ex instanceof AuthenticationException) {
-            restResult.setCode(Response.Status.FORBIDDEN.getStatusCode());
-            restResult.setMessage("请检查资源权限");
-            LOGGER.warn("请检查资源权限");
-            return Response.status(Response.Status.OK).entity(restResult).type(ContentType.APPLICATION_JSON_UTF_8).build();
-        }
-        if (ex instanceof AuthenticationException) {
-            restResult.setCode(Response.Status.UNAUTHORIZED.getStatusCode());
-            restResult.setMessage("用户认证失败");
-            LOGGER.warn("用户认证失败");
-            return Response.status(Response.Status.OK).entity(restResult).type(ContentType.APPLICATION_JSON_UTF_8).build();
-        }
+public class CustomExceptionMapper implements ExceptionMapper<Exception> {
 
-        if (ex instanceof NotFoundException) {
-            restResult.setCode(Response.Status.NOT_FOUND.getStatusCode());
-            restResult.setMessage("找不到资源地址");
-            LOGGER.warn("找不到资源地址");
-            return Response.status(Response.Status.OK).entity(restResult).type(ContentType.APPLICATION_JSON_UTF_8).build();
+//    public Response toResponse(NotFoundException e) {
+//        System.out.println("Exception mapper successfully got an exception: " + e + ":" + e.getMessage());
+//        System.out.println("Client IP is " + RpcContext.getContext().getRemoteAddressString());
+//        return Response.status(Response.Status.NOT_FOUND).entity("Oops! the requested resource is not found!").type("text/plain").build();
+//    }
+
+    public Response toResponse(Exception e) {
+        // TODO do more sophisticated exception handling and output
+        if (e.getCause() instanceof AuthorizationException) {
+            return handleAuthorizationException((AuthorizationException) e.getCause());
+        }else if (e.getCause() instanceof ApiException) {
+            return handleApiException((ApiException) e.getCause());
         }
-        String message = ex.getMessage();
-        if (message == null) {
-            restResult.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            restResult.setMessage("服务器内部错误");
-            LOGGER.error("服务器内部错误", ex);
-        } else if (message.contains("IncorrectCredentialsException")) {
-            restResult.setCode(Response.Status.UNAUTHORIZED.getStatusCode());
-            restResult.setMessage("用户名/密码错误");
-            LOGGER.warn("用户名/密码错误");
-        } else if (message.contains("AuthenticationException")) {
-            restResult.setCode(Response.Status.UNAUTHORIZED.getStatusCode());
-            restResult.setMessage("用户认证失败");
-            LOGGER.warn("用户认证失败");
-        } else if (message.contains("ConstraintViolationException")) {
-            restResult.setCode(Response.Status.BAD_REQUEST.getStatusCode());
-            restResult.setMessage("数据验证失败");
-            LOGGER.error("数据验证失败", ex);
-        } else {
-            restResult.setCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            restResult.setMessage(message);
-            LOGGER.error(message, ex);
-        }
-        return Response.status(Response.Status.OK).entity(restResult).type(ContentType.APPLICATION_JSON_UTF_8).build();
+//        else{
+//            return handleConstraintViolationException((ConstraintViolationException) e.getCause());
+//        }
+
+        // we may want to avoid exposing the dubbo exception details to certain clients
+        // TODO for now just do plain text output
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal server error: " + e.getMessage()).type(ContentType.TEXT_PLAIN_UTF_8).build();
     }
+
+    private Response handleAuthorizationException(AuthorizationException authorizationException) {
+        return Response.status(Response.Status.UNAUTHORIZED).entity(RestResult.REST_RESULT(RestResultEnum.UNAUTHORIZED,authorizationException.getMessage())).type(ContentType.APPLICATION_JSON_UTF_8).build();
+    }
+
+    protected Response handleApiException(ApiException apiException) {
+        return Response.status(Response.Status.OK).entity(apiException.getMessage()).type(ContentType.APPLICATION_JSON_UTF_8).build();
+    }
+
+    protected Response handleConstraintViolationException(ConstraintViolationException cve) {
+        ViolationReport report = new ViolationReport();
+        for (ConstraintViolation cv : cve.getConstraintViolations()) {
+            report.addConstraintViolation(new RestConstraintViolation(
+                    cv.getPropertyPath().toString(),
+                    cv.getMessage(),
+                    cv.getInvalidValue() == null ? "null" : cv.getInvalidValue().toString()));
+        }
+        // TODO for now just do xml output
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(report).type(ContentType.APPLICATION_JSON_UTF_8).build();
+    }
+
+//    @Override
+//    public Response toResponse(Exception e) {
+//        return null;
+//    }
 }

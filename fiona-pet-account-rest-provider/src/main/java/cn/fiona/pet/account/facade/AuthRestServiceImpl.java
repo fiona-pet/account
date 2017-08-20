@@ -34,7 +34,7 @@ public class AuthRestServiceImpl implements AuthRestService {
   }
     @Override
     public RestResult<String> login(@ApiParam(value = "登录信息", required = true) LoginVO loginVO) {
-        RestResult<String> restResult = RestResult.NOT_FOND();
+        RestResult<String> restResult = null;
 
 
         String token = accountService.login(loginVO);
