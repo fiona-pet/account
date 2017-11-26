@@ -91,6 +91,7 @@ public class AccountServiceImpl implements AccountService {
         userVO.setId(user.getId());
         userVO.setName(user.getName());
         userVO.setLoginName(user.getLoginName());
+        userVO.setOrganize(user.getOrganize());
 
         return userVO;
     }
