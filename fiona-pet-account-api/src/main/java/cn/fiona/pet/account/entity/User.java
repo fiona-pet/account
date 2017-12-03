@@ -46,6 +46,8 @@ public class User extends IdEntity {
 
     private String status;
 
+    private String personId;
+
     public String getStatus() {
         return status;
     }
@@ -136,6 +138,14 @@ public class User extends IdEntity {
 
     public void setOrganize(Organize organize) {
         this.organize = organize;
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(String personId) {
+        this.personId = personId;
     }
 
     @Override

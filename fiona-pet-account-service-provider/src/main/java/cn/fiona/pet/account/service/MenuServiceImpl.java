@@ -34,7 +34,11 @@ public class MenuServiceImpl implements MenuService {
     public Set<Menu> findByToken(String token) throws ApiException {
         Set<Menu> menus = new HashSet<Menu>();
 
-        User user = userDao.findOne(token);
+        User user = userDao.findByPersonId(token);
+        if (null == user){
+            user = userDao.findOne(token);
+        }
+
         Set<Role> roleSet = user.getRoles();
 
         for (Role role : roleSet) {
@@ -53,6 +57,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuVO> menus(String token) throws ApiException {
         LOGGER.debug("token:{}", token);
+
         Set<Menu> menuSet = findByToken(token);
 
         List<Menu> menuList = new ArrayList<Menu>();

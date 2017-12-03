@@ -21,7 +21,7 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--uncomment this if you want to test dubbo's monitor-->
-    <dubbo:monitor protocol="registry"/>
+    <!--<dubbo:monitor protocol="registry"/>-->
 
     <dubbo:protocol name="dubbo" serialization="kryo"
                     optimizer="cn.fiona.pet.account.SerializationOptimizerImpl"/>

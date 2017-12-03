@@ -1,0 +1,1 @@
+ALTER TABLE fiona_pet_account.t_user ADD person_id VARCHAR(36) NULL;

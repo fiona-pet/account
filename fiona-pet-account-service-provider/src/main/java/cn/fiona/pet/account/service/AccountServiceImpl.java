@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
             throw new InvalidParameterException("密码错误!");
         }
 
-        String token = user.getId();
+        String token = user.getPersonId();
 
         return token;
     }
@@ -70,7 +70,11 @@ public class AccountServiceImpl implements AccountService {
             throw new ApiException("token is null!");
         }
 
-        User user = userDao.findOne(token);
+        User user = userDao.findByPersonId(token);
+        if (null == user){
+            user = userDao.findOne(token);
+        }
+
         if (null == user){
             throw new ApiException(String.format("%s not exists!", token));
         }
@@ -81,14 +85,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public User getByToken(String token) throws ApiException {
-        User user = userDao.findOne(token);
+        User user = userDao.findByPersonId(token);
+        if (null == user){
+            user = userDao.findOne(token);
+        }
 
         if (null == user) {
             throw new ApiException(String.format("%s not exists!", token));
         }
 
         User userVO = new User();
-        userVO.setId(user.getId());
+        userVO.setId(token);
         userVO.setName(user.getName());
         userVO.setLoginName(user.getLoginName());
         userVO.setOrganize(user.getOrganize());
@@ -116,7 +123,7 @@ public class AccountServiceImpl implements AccountService {
     public User createUser(User user) {
 
         Organize organize =  new Organize();
-        organize.setId("9b06d376-44ff-4153-9b31-c29a19b8da29");
+        organize.setId("bj");
         user.setOrganize(organize);
 
         Set<Role> roleSet = new HashSet<Role>();
@@ -132,6 +139,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         user.setRoles(roleSet);
+        user.setStatus("OK");
 
         encode(user);
 
@@ -141,6 +149,7 @@ public class AccountServiceImpl implements AccountService {
 
         userVO.setId(user.getId());
         userVO.setName(user.getName());
+        userVO.setPersonId(user.getPersonId());
         userVO.setLoginName(user.getLoginName());
 
         return userVO;
@@ -148,7 +157,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean hasRole(String role, String token) throws ApiException {
-        User user = userDao.findOne(token);
+        User user = userDao.findByPersonId(token);
+        if (null == user){
+            user = userDao.findOne(token);
+        }
 
         if (null == user) {
             throw new ApiException(String.format("%s not exists!", token));
