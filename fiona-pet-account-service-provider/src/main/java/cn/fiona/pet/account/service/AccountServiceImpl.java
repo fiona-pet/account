@@ -122,9 +122,11 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public User createUser(User user) {
 
-        Organize organize =  new Organize();
-        organize.setId("bj");
-        user.setOrganize(organize);
+        if (null == user.getOrganize()) {
+            Organize organize =  new Organize();
+            organize.setId("bj");
+            user.setOrganize(organize);
+        }
 
         Set<Role> roleSet = new HashSet<Role>();
 
