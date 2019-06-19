@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.PathParam;
 
@@ -19,6 +20,7 @@ public class MessageRestServiceImpl implements MessageRestService {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageRestServiceImpl.class);
 
+    @Autowired
     private MessageService messageService;
 
     public MessageService getMessageService() {

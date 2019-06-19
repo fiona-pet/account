@@ -8,6 +8,7 @@ import cn.fiona.pet.account.service.AccountService;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.HeaderParam;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AuthRestServiceImpl implements AuthRestService {
 
   private static final Logger logger = LoggerFactory.getLogger(AuthRestServiceImpl.class);
 
+  @Autowired
   private AccountService accountService;
 
   public AccountService getAccountService() {

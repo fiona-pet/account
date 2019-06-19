@@ -36,11 +36,13 @@
                     com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter">
     </dubbo:protocol>
 
+    <dubbo:protocol name="dubbo" serialization="kryo"
+                    optimizer="cn.fiona.pet.account.SerializationOptimizerImpl"/>
+
     <!-- auth api v2 -->
     <dubbo:service interface="cn.fiona.pet.account.facade.AuthRestService" ref="authRestService"
                    protocol="rest" validation="true" timeout="2000" connections="100"/>
     <bean id="authRestService" class="cn.fiona.pet.account.facade.AuthRestServiceImpl">
-        <property name="accountService" ref="accountService"/>
     </bean>
     <!-- auth api v2 -->
 
@@ -48,18 +50,14 @@
     <dubbo:service interface="cn.fiona.pet.account.facade.MenuRestService" ref="menuRestService"
                    protocol="rest" validation="true" timeout="2000" connections="100"/>
     <bean id="menuRestService" class="cn.fiona.pet.account.facade.MenuRestServiceImpl">
-        <property name="menuService" ref="menuService"></property>
     </bean>
-    <dubbo:reference id="menuService" interface="cn.fiona.pet.account.service.MenuService"/>
     <!-- menu api v2 -->
 
     <!-- account api v2 -->
     <dubbo:service interface="cn.fiona.pet.account.facade.AccountRestService" ref="accountRestService"
                    protocol="rest" validation="true" timeout="2000" connections="100"/>
     <bean id="accountRestService" class="cn.fiona.pet.account.facade.AccountRestServiceImpl">
-        <property name="accountService" ref="accountService"/>
     </bean>
-    <dubbo:reference id="accountService" interface="cn.fiona.pet.account.service.AccountService"/>
     <!-- account api v2 -->
 
     <!-- message api v2 -->
@@ -67,9 +65,25 @@
                    protocol="rest" validation="true" timeout="2000" connections="100"/>
 
     <bean id="messageRestService" class="cn.fiona.pet.account.facade.MessageRestServiceImpl">
-        <property name="messageService" ref="messageService"/>
     </bean>
 
-    <dubbo:reference id="messageService" interface="cn.fiona.pet.account.service.MessageService"/>
     <!-- message api v2 -->
+
+
+    <!-- account api v2 -->
+    <dubbo:service interface="cn.fiona.pet.account.service.AccountService" ref="accountService"
+                   protocol="dubbo" validation="true" timeout="2000" connections="100"/>
+    <!-- account api v2 -->
+
+    <!--&lt;!&ndash; message service v2 &ndash;&gt;-->
+    <!--<dubbo:service interface="cn.fiona.pet.account.service.MessageService" ref="messageService"-->
+                   <!--protocol="dubbo" validation="true" timeout="2000" connections="100"/>-->
+
+    <!--&lt;!&ndash; message service v2 &ndash;&gt;-->
+
+    <!--&lt;!&ndash; menu service &ndash;&gt;-->
+    <!--<dubbo:service interface="cn.fiona.pet.account.service.MenuService" ref="menuService"-->
+                   <!--protocol="dubbo" validation="true" timeout="2000" connections="100"/>-->
+    <!--&lt;!&ndash; menu service &ndash;&gt;-->
+
 </beans>

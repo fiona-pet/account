@@ -6,6 +6,7 @@ import cn.fiona.pet.account.service.AccountService;
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * User: baiqw
@@ -16,6 +17,7 @@ public class AccountRestServiceImpl implements AccountRestService {
 
   private static final Logger logger = LoggerFactory.getLogger(AccountRestServiceImpl.class);
 
+  @Autowired
   private AccountService accountService;
 
   public AccountService getAccountService() {

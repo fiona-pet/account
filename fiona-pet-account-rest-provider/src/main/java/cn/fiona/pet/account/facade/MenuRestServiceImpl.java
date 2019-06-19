@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.HeaderParam;
 import java.util.*;
@@ -27,6 +28,7 @@ public class MenuRestServiceImpl implements MenuRestService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MenuRestServiceImpl.class);
 
+  @Autowired
   private MenuService menuService;
 
     public MenuService getMenuService() {

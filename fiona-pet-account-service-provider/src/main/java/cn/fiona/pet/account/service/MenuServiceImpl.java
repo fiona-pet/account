@@ -13,6 +13,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -21,6 +22,7 @@ import java.util.*;
  * @author baiqw
  */
 @Transactional
+@Service("menuService")
 public class MenuServiceImpl implements MenuService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuServiceImpl.class);
 

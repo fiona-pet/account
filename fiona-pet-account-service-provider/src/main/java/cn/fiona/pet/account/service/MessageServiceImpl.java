@@ -4,12 +4,14 @@ import cn.fiona.pet.account.repository.MessageDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * User: baiqw
  * Date: 14-12-9
  * Time: 下午3:45
  */
+@Service("messageService")
 public class MessageServiceImpl implements MessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);

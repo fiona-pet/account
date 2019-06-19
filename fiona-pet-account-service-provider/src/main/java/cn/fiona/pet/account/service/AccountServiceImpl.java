@@ -9,11 +9,13 @@ import cn.fiona.pet.account.facade.LoginVO;
 import cn.fiona.pet.account.repository.RoleDao;
 import cn.fiona.pet.account.repository.UserDao;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.dubbo.x.entity.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springside.modules.security.utils.Digests;
 import org.springside.modules.utils.Encodes;
 
@@ -28,6 +30,7 @@ import java.util.Set;
  * @author baiqw
  */
 @Transactional
+@Service("accountService")
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private UserDao userDao;
