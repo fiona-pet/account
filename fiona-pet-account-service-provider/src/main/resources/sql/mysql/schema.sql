@@ -1,4 +1,4 @@
--- CREATE DATABASE IF NOT EXISTS fiona_pet_account DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+-- CREATE DATABASE IF NOT EXISTS bj_fiona_pet_business DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 -- ----------------------------
 -- Table structure for t_user
 -- ----------------------------
