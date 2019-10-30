@@ -30,7 +30,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <spring-data-jpa.version>1.6.0.RELEASE</spring-data-jpa.version>
         <hibernate-validator.version>5.0.3.Final</hibernate-validator.version>
-        <jackson.version>2.4.0</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
     </properties>
     <dependencies>
