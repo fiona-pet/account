@@ -43,7 +43,7 @@
         <assertj.version>1.6.1</assertj.version>
         <mockito.version>1.9.5</mockito.version>
         <jetty.version>7.6.15.v20140411</jetty.version>
-        <shiro.version>1.3.2</shiro.version>
+        <shiro.version>1.6.0</shiro.version>
 
         <!-- 项目属性 -->
         <!--<jdbc.driver.groupId>com.h2database</jdbc.driver.groupId>-->
